@@ -12,6 +12,8 @@ import {SharedModule} from "../shared/shared.module";
 import {FormsModule} from "@angular/forms";
 import {ComponentsModule} from "../components/components.module";
 import {AccountSettingsComponent} from './account-settings/account-settings.component';
+import {PromesasComponent} from './promesas/promesas.component';
+import {RxjsComponent} from './rxjs/rxjs.component';
 
 
 @NgModule({
@@ -20,7 +22,9 @@ import {AccountSettingsComponent} from './account-settings/account-settings.comp
     ProgressComponent,
     Grafica1Component,
     PagesComponent,
-    AccountSettingsComponent
+    AccountSettingsComponent,
+    PromesasComponent,
+    RxjsComponent
   ],
   exports: [
     DashboardComponent,
