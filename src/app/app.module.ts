@@ -7,6 +7,7 @@ import {PagesModule} from "./pages/pages.module";
 import {AppComponent} from './app.component';
 import {NopagefoundComponent} from './pages/nopagefound/nopagefound.component';
 import {AuthModule} from "./auth/auth.module";
+import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import {AuthModule} from "./auth/auth.module";
     BrowserModule,
     AppRoutingModule,
     PagesModule,
-    AuthModule
+    AuthModule,
+    HttpClientModule
   ],
   bootstrap: [AppComponent]
 })

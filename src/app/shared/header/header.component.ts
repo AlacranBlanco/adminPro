@@ -1,16 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, NgZone, OnInit} from '@angular/core';
+import {UsuarioService} from "../../services/usuario.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styles: [
-  ]
+  styles: []
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
 
-  constructor() { }
+  constructor(private usuarioService: UsuarioService, private router: Router, private ngZone: NgZone) {
+  }
 
-  ngOnInit(): void {
+  logOut() {
+    this.usuarioService.logOut();
+    this.ngZone.run(() => {
+      this.router.navigateByUrl('/login');
+    })
   }
 
 }
