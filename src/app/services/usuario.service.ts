@@ -6,6 +6,7 @@ import {Observable, of} from "rxjs";
 import {LoginForm} from "../interfaces/login-form.interface";
 import {catchError, map, tap} from "rxjs/operators";
 import {Usuario} from "../models/usuario";
+import {CargarUsuario} from "../interfaces/cargar-usuarios.interface";
 
 const base_url = environment.base_url;
 declare const gapi: any
@@ -25,6 +26,14 @@ export class UsuarioService {
 
   get token(): string {
     return localStorage.getItem('token') || '';
+  }
+
+  get headers() {
+    return {
+      headers: {
+        'x-token': this.token
+      }
+    }
   }
 
   get uid(): string {
@@ -51,19 +60,16 @@ export class UsuarioService {
 
   validarToken(): Observable<boolean> {
 
-    return this.httpClient.get(`${base_url}/login/renew`, {
-      headers: {
-        'x-token': this.token
-      }
-    }).pipe(
-      map((resp: any) => {
-        const {email, google, name, role, uid = '', img} = resp.usuario;
-        this.usuario = new Usuario(email, name, '', img, google, uid, role);
-        localStorage.setItem('token', resp.token)
-        return true;
-      }),
-      catchError(() => of(false))
-    );
+    return this.httpClient.get(`${base_url}/login/renew`, this.headers)
+      .pipe(
+        map((resp: any) => {
+          const {email, google, name, role, uid = '', img} = resp.usuario;
+          this.usuario = new Usuario(email, name, '', img, google, uid, role);
+          localStorage.setItem('token', resp.token)
+          return true;
+        }),
+        catchError(() => of(false))
+      );
   }
 
   crearUsuario(formData: RegisterForm): Observable<any> {
@@ -76,18 +82,12 @@ export class UsuarioService {
   }
 
   actualizarPerfil(data: { email: string, nombre: string, role: string }) {
-
     data = {
       ...data,
       // @ts-ignore
       role: this.usuario.role
-    };
-
-    return this.httpClient.put(`${base_url}/usuarios/${this.uid}`, data, {
-      headers: {
-        'x-token': this.token
-      }
-    })
+    }
+    return this.httpClient.put(`${base_url}/usuarios/${this.uid}`, data, this.headers)
   }
 
   login(formData: LoginForm): Observable<any> {
@@ -106,6 +106,30 @@ export class UsuarioService {
           localStorage.setItem('token', resp.token)
         })
       )
+  }
+
+  cargarUsuarios(desde: number = 0) {
+    const url = `${base_url}/usuarios?desde=${desde}`;
+    return this.httpClient.get<CargarUsuario>(url, this.headers)
+      .pipe(
+        map(resp => {
+          const usuarios = resp.usuarios.map(user => new Usuario(user.email, user.name, '', user.img, user.google, user.uid, user.role));
+          return {
+            total: resp.total,
+            usuarios
+          };
+        })
+      )
+  }
+
+  eliminarUsuario(usuario: Usuario) {
+    const url = `${base_url}/usuarios/${usuario.uid}`;
+    return this.httpClient.delete(url, this.headers)
+  }
+
+  guardarUsuario(usuario: Usuario) {
+
+    return this.httpClient.put(`${base_url}/usuarios/${usuario.uid}`, usuario, this.headers)
   }
 
 }
