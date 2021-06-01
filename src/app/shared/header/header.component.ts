@@ -11,11 +11,9 @@ import {Usuario} from "../../models/usuario";
 export class HeaderComponent {
 
   public usuarioInfo: Usuario;
-  public userImageUrl = "";
 
   constructor(private usuarioService: UsuarioService, private router: Router, private ngZone: NgZone) {
     this.usuarioInfo = usuarioService.usuario;
-    this.userImageUrl = usuarioService.usuario.getImagenUrl;
 
   }
 

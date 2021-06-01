@@ -9,7 +9,7 @@
       <ul id="sidebarnav">
         <li class="user-profile">
           <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><img
-            [src]="userImageUrl" alt="user"/><span class="hide-menu">{{usuarioInfo.name}}</span></a>
+            [src]="usuarioInfo.getImagenUrl" alt="user"/><span class="hide-menu">{{usuarioInfo.name}}</span></a>
           <ul aria-expanded="false" class="collapse">
             <li><a routerLinkActive="active" routerLink="./perfil">My Profile </a></li>
             <li><a href="javascript:void()">My Balance</a></li>
