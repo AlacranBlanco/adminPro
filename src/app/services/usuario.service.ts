@@ -5,6 +5,7 @@ import {environment} from "../../environments/environment";
 import {Observable, of} from "rxjs";
 import {LoginForm} from "../interfaces/login-form.interface";
 import {catchError, map, tap} from "rxjs/operators";
+import {Usuario} from "../models/usuario";
 
 const base_url = environment.base_url;
 declare const gapi: any
@@ -15,6 +16,8 @@ declare const gapi: any
 export class UsuarioService {
 
   public auth2: any
+  // @ts-ignore
+  public usuario: Usuario;
 
   constructor(private httpClient: HttpClient) {
     this.googleInit();
@@ -45,10 +48,12 @@ export class UsuarioService {
         'x-token': token
       }
     }).pipe(
-      tap((resp: any) => {
+      map((resp: any) => {
+        const {email, google, name, role, uid = '', img} = resp.usuario;
+        this.usuario = new Usuario(email, name, '', img, google, uid, role);
         localStorage.setItem('token', resp.token)
+        return true;
       }),
-      map(resp => true),
       catchError(error => of(false))
     );
   }

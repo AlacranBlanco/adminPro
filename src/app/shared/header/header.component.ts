@@ -1,6 +1,7 @@
 import {Component, NgZone, OnInit} from '@angular/core';
 import {UsuarioService} from "../../services/usuario.service";
 import {Router} from "@angular/router";
+import {Usuario} from "../../models/usuario";
 
 @Component({
   selector: 'app-header',
@@ -9,7 +10,13 @@ import {Router} from "@angular/router";
 })
 export class HeaderComponent {
 
+  public usuarioInfo: Usuario;
+  public userImageUrl = "";
+
   constructor(private usuarioService: UsuarioService, private router: Router, private ngZone: NgZone) {
+    this.usuarioInfo = usuarioService.usuario;
+    this.userImageUrl = usuarioService.usuario.getImagenUrl;
+
   }
 
   logOut() {
