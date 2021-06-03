@@ -62,6 +62,7 @@ export class UsuariosComponent implements OnInit, OnDestroy {
     if (termino) {
       this.busquedaService.buscar('usuarios', termino)
         .subscribe(resp => {
+          // @ts-ignore
           this.usuarios = resp;
         });
     } else {
