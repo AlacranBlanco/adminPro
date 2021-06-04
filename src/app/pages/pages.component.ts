@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {SettingsService} from "../services/settings.service";
+import {SidebarService} from "../services/sidebar.service";
 
 // @ts-ignore
 declare function customInitFunctions();

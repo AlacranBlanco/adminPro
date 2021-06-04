@@ -24,6 +24,10 @@ export class UsuarioService {
     this.googleInit();
   }
 
+  get roleUsuario(): 'ADM_ROLE' | 'USER_ROLE' {
+    return this.usuario.role!;
+  }
+
   get token(): string {
     return localStorage.getItem('token') || '';
   }
@@ -40,6 +44,11 @@ export class UsuarioService {
     return this.usuario.uid || '';
   }
 
+  guardarLocalStorage(token: string, menu: any) {
+    localStorage.setItem('token', token);
+    localStorage.setItem('menu', JSON.stringify(menu));
+  }
+
   googleInit() {
     return new Promise<void>(resolve => {
       gapi.load('auth2', () => {
@@ -54,6 +63,7 @@ export class UsuarioService {
   }
 
   logOut() {
+    localStorage.removeItem('menu');
     localStorage.removeItem('token');
     this.auth2.signOut();
   }
@@ -65,7 +75,7 @@ export class UsuarioService {
         map((resp: any) => {
           const {email, google, name, role, uid = '', img} = resp.usuario;
           this.usuario = new Usuario(email, name, '', img, google, uid, role);
-          localStorage.setItem('token', resp.token)
+          this.guardarLocalStorage(resp.token, resp.menu)
           return true;
         }),
         catchError(() => of(false))
@@ -76,7 +86,7 @@ export class UsuarioService {
     return this.httpClient.post(`${base_url}/usuarios`, formData)
       .pipe(
         tap((resp: any) => {
-          localStorage.setItem('token', resp.token)
+          this.guardarLocalStorage(resp.token, resp.menu)
         })
       )
   }
@@ -94,7 +104,7 @@ export class UsuarioService {
     return this.httpClient.post(`${base_url}/login`, formData)
       .pipe(
         tap((resp: any) => {
-          localStorage.setItem('token', resp.token)
+          this.guardarLocalStorage(resp.token, resp.menu)
         })
       )
   }
@@ -103,7 +113,7 @@ export class UsuarioService {
     return this.httpClient.post(`${base_url}/login/google`, {token})
       .pipe(
         tap((resp: any) => {
-          localStorage.setItem('token', resp.token)
+          this.guardarLocalStorage(resp.token, resp.menu)
         })
       )
   }
